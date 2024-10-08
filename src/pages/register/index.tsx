@@ -1,3 +1,4 @@
+import { useEffect, useContext } from "react";
 import logoImg from "../../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import Container from "../../components/container";
@@ -6,9 +7,14 @@ import Input from "../../components/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createUserWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+
 import { auth } from "../../services/firebaseConnection";
-import { useEffect } from "react";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signOut,
+} from "firebase/auth";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const schema = z.object({
   name: z.string().min(1, "O campo nome é obrigatório"),
@@ -25,8 +31,9 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function Register() {
-  const navigate = useNavigate();
+  const { handleInfoUser } = useContext(AuthContext);
 
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -51,10 +58,17 @@ export default function Register() {
           displayName: data.name,
         });
 
+        handleInfoUser({
+          name: data.name,
+          email: data.email,
+          uid: user.user.uid,
+        });
+
+        console.log("CADASTRADO COM SUCESSO!");
         navigate("/dashboard", { replace: true });
       })
       .catch((error) => {
-        console.log("ERRO AO CADASTRAR");
+        console.log("ERRO AO CADASTRAR ESTE USUARIO");
         console.log(error);
       });
   }

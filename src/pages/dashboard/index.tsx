@@ -1,7 +1,10 @@
-export default function Dashboard() {
- return (
-   <div>
+import Container from "../../components/container";
+import { DashboardHeader } from "../../components/panelHeader";
 
-   </div>
- );
+export default function Dashboard() {
+  return (
+    <Container>
+      <DashboardHeader />
+    </Container>
+  );
 }
