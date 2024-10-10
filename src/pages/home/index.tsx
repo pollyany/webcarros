@@ -21,7 +21,7 @@ interface CarImageProps {
   url: string;
 }
 
-export function Home() {
+export default function Home() {
   const [cars, setCars] = useState<CarsProps[]>([]);
   const [loadImages, setLoadImages] = useState<string[]>([]);
 

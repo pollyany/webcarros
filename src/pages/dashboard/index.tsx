@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext  } from 'react'
 import  Container  from "../../components/container";
-import { DashboardHeader } from '../../components/panelHeader'
+import  DashboardHeader  from '../../components/panelHeader'
 
 import { FiTrash2 } from 'react-icons/fi'
 
@@ -25,7 +25,7 @@ interface ImageCarProps{
   url: string
 }
 
-export function Dashboard() {
+export default function Dashboard() {
   const [cars, setCars] = useState<CarProps[]>([]); 
   const { user } = useContext(AuthContext);
 

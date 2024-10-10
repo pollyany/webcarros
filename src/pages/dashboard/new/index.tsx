@@ -1,6 +1,6 @@
 import { ChangeEvent, useState, useContext } from "react";
 import Container from "../../../components/container";
-import { DashboardHeader } from "../../../components/panelHeader";
+import  DashboardHeader  from "../../../components/panelHeader";
 
 import { FiUpload, FiTrash } from "react-icons/fi";
 import { useForm } from "react-hook-form";
@@ -44,7 +44,7 @@ interface ImageItemProps {
   url: string;
 }
 
-export function New() {
+export default function New() {
   const { user } = useContext(AuthContext);
   const {
     register,

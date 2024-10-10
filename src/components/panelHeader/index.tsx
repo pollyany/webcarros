@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import { auth } from '../../services/firebaseConnection'
 
-export function DashboardHeader(){
+export default function DashboardHeader(){
 
   async function handleLogout(){
     await signOut(auth);

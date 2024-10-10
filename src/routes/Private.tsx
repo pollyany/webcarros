@@ -8,7 +8,7 @@ interface PrivateProps{
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function Private({ children }: PrivateProps): any {
+export default function Private({ children }: PrivateProps): any {
   const { signed, loadingAuth } = useContext(AuthContext);
 
   if(loadingAuth){

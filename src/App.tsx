@@ -6,7 +6,7 @@ import Dashboard from "./pages/dashboard";
 import New from "./pages/dashboard/new";
 import Login from "./pages/login";
 import Register from "./pages/register";
-import { Private } from "./routes/Private";
+import  Private  from "./routes/Private";
 
 const router = createBrowserRouter([
   {
