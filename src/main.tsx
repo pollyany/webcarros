@@ -7,15 +7,17 @@ import AuthProvider from "./contexts/AuthContext";
 
 import { register } from "swiper/element";
 
-register()
+register();
 
 import "swiper/css";
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
-import 'swiper/css/scrollbar'
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root") as HTMLElement).render(
   <AuthProvider>
+    <Toaster position="top-right" reverseOrder={false} />
     <RouterProvider router={router} />
   </AuthProvider>
 );

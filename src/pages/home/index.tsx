@@ -28,7 +28,7 @@ interface CarImageProps{
 }
 
 
-export function Home() {
+export default function Home() {
   const [cars, setCars] = useState<CarsProps[]>([])
   const [loadImages, setLoadImages] = useState<string[]>([])
   const [input, setInput] = useState("")
@@ -132,7 +132,7 @@ export function Home() {
         <Link key={car.id} to={`/car/${car.id}`}>
           <section className="w-full bg-white rounded-lg">
             <div 
-            className="w-full h-72 rounded-lg bg-slate-200"
+            className="w-full h-72 rounded-lg mb-2 bg-slate-200"
             style={{ display: loadImages.includes(car.id) ? "none" : "block" }}
             ></div>
             <img

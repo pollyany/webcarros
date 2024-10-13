@@ -18,6 +18,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
+import toast from "react-hot-toast";
 
 const schema = z.object({
   name: z.string().min(1, "O campo nome é obrigatório"),
@@ -91,13 +92,14 @@ export default function New() {
         };
 
         setCarImages((images) => [...images, imageItem]);
+        toast.success("Imagem cadastrada com sucesso!")
       });
     });
   }
 
   function onSubmit(data: FormData) {
     if (carImages.length === 0) {
-      alert("Envie alguma imagem deste carro!");
+      toast.error("Envie pelo meno 1 imagem!");
       return;
     }
 
@@ -127,10 +129,12 @@ export default function New() {
         reset();
         setCarImages([]);
         console.log("CADASTRADO COM SUCESSO!");
+        toast.success("Carro cadastrado com sucesso!")
       })
       .catch((error) => {
         console.log(error);
         console.log("ERRO AO CADASTRAR NO BANCO");
+        toast.error("Erro ao cadastrar carro.")
       });
   }
 
