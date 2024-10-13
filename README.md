@@ -1,24 +1,34 @@
-<h1 align="start"> DevLink </h1>
+<h1 align="start"> WebCarros </h1>
 
 <p align="start">
-  <img alt="projeto DevLinks" src=".github/preview.png" width="100%">
+  <img alt="Imagem webCarros" src=".github/login.png" width="100%">
 </p>
 
 ## 💻 Projeto
 
-Projeto baseado no Linktree com sistema de login e de Admin.
+WebCarros é uma plataforma online de vendas de carros.
+
+[Clique aqui](https://web-carros-rosy.vercel.app/) para acessar a plataforma WebCarros
 
 <p align="start">
-  <img alt="projeto DevLinks" src=".github/previewAdm.png" width="100%">
+  <img alt="Imagem webCarros" src=".github/home.png" width="100%">
+</p>
+<p align="start">
+  <img alt="Imagem webCarros" src=".github/dashboard.png" width="100%">
+</p>
+<p align="start">
+  <img alt="Imagem webCarros" src=".github/cadastroCarro.png" width="100%">
 </p>
 
 ## 🚀 Tecnologias
 
 Este projeto foi desenvolvido com as seguintes tecnologias:
 
-- Vite
-- React Js
+- ReactJs + Vite
 - Typescript
+- Tailwind CSS
 - Firebase
-- React Router
-- Tailwind Css
+- React Router Dom
+- React Hook Form + Zod
+- React Hot Toast
+- Swiper
