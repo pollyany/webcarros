@@ -6,9 +6,11 @@
 
 ## 💻 Projeto
 
-WebCarros é uma plataforma online de vendas de carros.
+WebCarros é uma plataforma online de vendas de carros. Com ele, é possível:
 
-[Clique aqui](https://web-carros-rosy.vercel.app/) para acessar a plataforma WebCarros
+- Cadastrar veículos para venda;
+- Visualizar anúncios de outros usuários;
+- Contatar diretamente o anunciante via WhatsApp para negociações rápidas.
 
 <p align="start">
   <img alt="Imagem webCarros" src=".github/home.png" width="100%">

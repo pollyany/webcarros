@@ -44,7 +44,7 @@ export default function Login() {
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(() => {
         toast.success("Logado com sucesso!")
-        navigate("/dashboard", { replace: true });
+        navigate("/", { replace: true });
       })
       .catch((error) => {
         console.log("Erro ao logar");

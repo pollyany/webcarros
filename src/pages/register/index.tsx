@@ -67,7 +67,7 @@ export default function Register() {
 
         console.log("CADASTRADO COM SUCESSO!");
         toast.success("Bem vindo ao webcarros!")
-        navigate("/dashboard", { replace: true });
+        navigate("/", { replace: true });
       })
       .catch((error) => {
         console.log("ERRO AO CADASTRAR ESTE USUARIO");
