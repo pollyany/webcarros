@@ -1,51 +1,44 @@
-import { useState, useEffect } from 'react'
-import  Container  from "../../components/container";
-import { Link } from 'react-router-dom'
-import {
-  collection,
-  query,
-  getDocs,
-  orderBy,
-  where
-} from 'firebase/firestore'
-import { db } from '../../services/firebaseConnection'
+import { useState, useEffect } from "react";
+import Container from "../../components/container";
+import { Link } from "react-router-dom";
+import { collection, query, getDocs, orderBy, where } from "firebase/firestore";
+import { db } from "../../services/firebaseConnection";
 
-interface CarsProps{
+interface CarsProps {
   id: string;
   name: string;
   year: string;
-  uid: string;
   price: string | number;
   city: string;
   km: string;
   images: CarImageProps[];
 }
 
-interface CarImageProps{
+interface CarImageProps {
   name: string;
-  uid: string;
   url: string;
 }
 
-
 export default function Home() {
-  const [cars, setCars] = useState<CarsProps[]>([])
-  const [loadImages, setLoadImages] = useState<string[]>([])
-  const [input, setInput] = useState("")
+  const [cars, setCars] = useState<CarsProps[]>([]);
+  const [loadImages, setLoadImages] = useState<string[]>([]);
+  const [input, setInput] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [loadingCars, setLoadingCars] = useState(true);
 
   useEffect(() => {
     loadCars();
-  }, [])
+  }, []);
 
-  function loadCars(){
-    const carsRef = collection(db, "cars")
-    const queryRef = query(carsRef, orderBy("created", "desc"))
+  function loadCars() {
+    setIsSearching(true);
+    const carsRef = collection(db, "cars");
+    const queryRef = query(carsRef, orderBy("created", "desc"));
 
-    getDocs(queryRef)
-    .then((snapshot) => {
+    getDocs(queryRef).then((snapshot) => {
       const listcars = [] as CarsProps[];
 
-      snapshot.forEach( doc => {
+      snapshot.forEach((doc) => {
         listcars.push({
           id: doc.id,
           name: doc.data().name,
@@ -54,35 +47,35 @@ export default function Home() {
           city: doc.data().city,
           price: doc.data().price,
           images: doc.data().images,
-          uid: doc.data().uid
-        })
-      })
+        });
+      });
 
-      setCars(listcars);  
-    })
-
+      setCars(listcars);
+      setLoadingCars(false);
+    });
   }
 
-
-  function handleImageLoad(id: string){
-    setLoadImages((prevImageLoaded) => [...prevImageLoaded, id])
+  function handleImageLoad(id: string) {
+    setLoadImages((prevImageLoaded) => [...prevImageLoaded, id]);
   }
 
-  async function handleSearchCar(){
-    if(input === ''){
+  async function handleSearchCar() {
+    if (input === "") {
       loadCars();
       return;
     }
 
+    setIsSearching(true);
     setCars([]);
     setLoadImages([]);
 
-    const q = query(collection(db, "cars"), 
-    where("name", ">=", input.toUpperCase()),
-    where("name", "<=", input.toUpperCase() + "\uf8ff")
-    )
+    const q = query(
+      collection(db, "cars"),
+      where("name", ">=", input.toUpperCase()),
+      where("name", "<=", input.toUpperCase() + "\uf8ff")
+    );
 
-    const querySnapshot = await getDocs(q)
+    const querySnapshot = await getDocs(q);
 
     const listcars = [] as CarsProps[];
 
@@ -95,74 +88,102 @@ export default function Home() {
         city: doc.data().city,
         price: doc.data().price,
         images: doc.data().images,
-        uid: doc.data().uid
-      })
-    })
+      });
+    });
 
-   setCars(listcars);
-
+    setCars(listcars);
   }
-
 
   return (
     <Container>
-      <section className="bg-white p-4 rounded-lg w-full max-w-3xl mx-auto flex justify-center items-center gap-2">
+      <section className="bg-white p-4 rounded-lg  w-full max-w-3xl mx-auto flex justify-center items-center gap-2">
         <input
           className="w-full border-2 rounded-lg h-9 px-3 outline-none"
-          placeholder="Digite o nome do carro..."
+          placeholder="Qual veículo você está buscando?"
           value={input}
-          onChange={ (e) => setInput(e.target.value) }
+          onChange={(e) => setInput(e.target.value)}
+          disabled={cars.length < 1 && !isSearching}
         />
         <button
+          type="button"
           className="bg-red-500 h-9 px-8 rounded-lg text-white font-medium text-lg"
           onClick={handleSearchCar}
+          disabled={cars.length < 1 && !isSearching}
         >
           Buscar
         </button>
       </section>
 
-      <h1 className="font-bold text-center mt-6 text-2xl mb-4">
-        Carros novos e usados em todo o Brasil
-      </h1>
+      {cars.length > 0 && (
+        <>
+          {" "}
+          <h1 className="font-bold text-center mt-6 text-2xl mb-4">
+            Os melhores carros para você
+          </h1>
+          <main className="grid gird-cols-1 gap-6 mb-4 md:grid-cols-2 lg:grid-cols-3">
+            {cars.map((car) => (
+              <section
+                key={car.id}
+                className="w-full bg-white overflow-hidden rounded-lg"
+              >
+                <div
+                  className="w-full h-72 rounded-lg mb-2 bg-slate-200"
+                  style={{
+                    display: loadImages.includes(car.id) ? "none" : "block",
+                  }}
+                ></div>
+                <Link to={`/car/${car.id}`}>
+                  <img
+                    className="w-full rounded-lg mb-2 h-72 object-cover max-h-72 hover:scale-105 transition-all"
+                    src={car.images[0].url}
+                    alt="Carro"
+                    onLoad={() => handleImageLoad(car.id)}
+                    style={{
+                      display: loadImages.includes(car.id) ? "block" : "none",
+                    }}
+                  />
+                </Link>
+                <p className="font-bold mt-1 mb-2 px-2">{car.name}</p>
 
-      <main className="grid gird-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="flex flex-col px-2">
+                  <span className="text-zinc-700 mb-6">
+                    Ano {car.year} | {car.km} km
+                  </span>
+                  <strong className="text-black font-medium text-xl">
+                    R$ {car.price}
+                  </strong>
+                </div>
 
+                <div className="w-full h-px bg-slate-200 my-2"></div>
 
-      {cars.map( car => (
-        <Link key={car.id} to={`/car/${car.id}`}>
-          <section className="w-full bg-white rounded-lg">
-            <div 
-            className="w-full h-72 rounded-lg mb-2 bg-slate-200"
-            style={{ display: loadImages.includes(car.id) ? "none" : "block" }}
-            ></div>
-            <img
-              className="w-full rounded-lg mb-2 max-h-72 hover:scale-105 transition-all"
-              src={car.images[0].url}
-              alt="Carro" 
-              onLoad={ () => handleImageLoad(car.id) }
-              style={{ display: loadImages.includes(car.id) ? "block" : "none" }}
-            />
-            <p className="font-bold mt-1 mb-2 px-2">{car.name}</p>
+                <div className="px-2 pb-2 flex justify-between">
+                  <span className="text-black">{car.city}</span>
+                  <Link
+                    to={`/car/${car.id}`}
+                    className="bg-red-500 text-white h-8 px-6 rounded-md font-medium text-base flex items-center justify-center"
+                  >
+                    Ver mais
+                  </Link>
+                </div>
+              </section>
+            ))}
+          </main>
+        </>
+      )}
 
-            <div className="flex flex-col px-2">
-              <span className="text-zinc-700 mb-6">Ano {car.year} | {car.km} km</span>
-              <strong className="text-black font-medium text-xl">R$ {car.price}</strong>
-            </div>
+      {cars.length < 1 && !loadingCars && (
+        <h1 className="font-bold text-center mt-6 text-2xl mb-4">
+          {isSearching
+            ? "Nenhum veículo encontrado com os critérios de busca."
+            : "O sistema ainda não possui nenhum veículo cadastrado :/"}
+        </h1>
+      )}
 
-            <div className="w-full h-px bg-slate-200 my-2"></div>
-
-            <div className="px-2 pb-2">
-              <span className="text-black">
-                {car.city}
-              </span>
-            </div>
-
-          </section>
-        </Link>
-      ))}
-
-
-      </main>
+      {loadingCars && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
+        </div>
+      )}
     </Container>
-  )
+  );
 }

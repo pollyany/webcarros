@@ -43,13 +43,13 @@ export default function Login() {
   function onSubmit(data: FormData) {
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(() => {
-        toast.success("Logado com sucesso!")
+        toast.success("Logado com sucesso!");
         navigate("/", { replace: true });
       })
       .catch((error) => {
         console.log("Erro ao logar");
         console.log(error);
-        toast.error("Erro ao fazer o login.")
+        toast.error("Usuário ou senha inválidos.");
       });
   }
 
@@ -86,13 +86,11 @@ export default function Login() {
 
           <button
             type="submit"
-            className="bg-zinc-900 w-full rounded-md text-white h-10 font-medium"
+            className="bg-gray-800 w-full rounded-md text-white h-10 font-medium"
           >
             Acessar
           </button>
         </form>
-
-        <Link to="/register">Ainda não possui uma conta? Cadastre-se</Link>
       </div>
     </Container>
   );

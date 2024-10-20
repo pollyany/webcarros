@@ -9,7 +9,7 @@ import { db } from "../../services/firebaseConnection";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
-interface CarProps {
+export interface CarProps {
   id: string;
   name: string;
   model: string;
@@ -19,14 +19,11 @@ interface CarProps {
   description: string;
   created: string;
   price: string | number;
-  owner: string;
-  uid: string;
   whatsapp: string;
   images: ImagesCarProps[];
 }
 
 interface ImagesCarProps {
-  uid: string;
   name: string;
   url: string;
 }
@@ -55,13 +52,11 @@ export default function CarDetail() {
           year: snapshot.data()?.year,
           city: snapshot.data()?.city,
           model: snapshot.data()?.model,
-          uid: snapshot.data()?.uid,
           description: snapshot.data()?.description,
           created: snapshot.data()?.created,
           whatsapp: snapshot.data()?.whatsapp,
           price: snapshot.data()?.price,
           km: snapshot.data()?.km,
-          owner: snapshot.data()?.owner,
           images: snapshot.data()?.images,
         });
       });

@@ -1,6 +1,6 @@
-import { ChangeEvent, useState, useContext } from "react";
+import { ChangeEvent, useState, useContext, useEffect } from "react";
 import Container from "../../../components/container";
-import  DashboardHeader  from "../../../components/panelHeader";
+import DashboardHeader from "../../../components/panelHeader";
 
 import { FiUpload, FiTrash } from "react-icons/fi";
 import { useForm } from "react-hook-form";
@@ -17,8 +17,9 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { addDoc, collection } from "firebase/firestore";
+import { updateDoc, doc, getDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
 
 const schema = z.object({
   name: z.string().min(1, "O campo nome é obrigatório"),
@@ -40,11 +41,10 @@ type FormData = z.infer<typeof schema>;
 
 interface ImageItemProps {
   name: string;
-  previewUrl: string;
   url: string;
 }
 
-export default function New() {
+export default function Edit() {
   const { user } = useContext(AuthContext);
   const {
     register,
@@ -57,6 +57,40 @@ export default function New() {
   });
 
   const [carImages, setCarImages] = useState<ImageItemProps[]>([]);
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function loadCar() {
+      if (!id) {
+        return;
+      }
+
+      const docRef = doc(db, "cars", id);
+      const snapshot = await getDoc(docRef);
+      if (!snapshot.exists()) {
+        navigate("/dashboard");
+        return;
+      }
+
+      const carData = snapshot.data();
+
+      reset({
+        name: carData?.name,
+        year: carData?.year,
+        city: carData?.city,
+        model: carData?.model,
+        description: carData?.description,
+        whatsapp: carData?.whatsapp,
+        price: carData?.price,
+        km: carData?.km,
+      });
+
+      setCarImages(carData?.images || []);
+    }
+
+    loadCar();
+  }, [id]);
 
   async function handleFile(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -89,12 +123,12 @@ export default function New() {
         };
 
         setCarImages((images) => [...images, imageItem]);
-        toast.success("Imagem cadastrada com sucesso!")
+        toast.success("Imagem cadastrada com sucesso!");
       });
     });
   }
 
-  function onSubmit(data: FormData) {
+  async function onSubmit(data: FormData) {
     if (carImages.length === 0) {
       toast.error("Envie pelo meno 1 imagem!");
       return;
@@ -107,7 +141,9 @@ export default function New() {
       };
     });
 
-    addDoc(collection(db, "cars"), {
+    const carRef = doc(db, "cars", id as string);
+
+    await updateDoc(carRef, {
       name: data.name.toUpperCase(),
       model: data.model,
       whatsapp: data.whatsapp,
@@ -116,19 +152,26 @@ export default function New() {
       km: data.km,
       price: data.price,
       description: data.description,
-      created: new Date(),
       images: carListImages,
     })
       .then(() => {
-        reset();
         setCarImages([]);
-        console.log("CADASTRADO COM SUCESSO!");
-        toast.success("Carro cadastrado com sucesso!")
+        reset({
+          name: "",
+          model: "",
+          whatsapp: "",
+          city: "",
+          year: "",
+          km: "",
+          price: "",
+          description: "",
+        });
+        navigate("/dashboard")
+        toast.success("Carro atualizado com sucesso!");
       })
       .catch((error) => {
-        console.log(error);
-        console.log("ERRO AO CADASTRAR NO BANCO");
-        toast.error("Erro ao cadastrar carro.")
+        console.log("Erro ao atualizar o carro:", error);
+        toast.error("Erro ao atualizar carro.");
       });
   }
 
@@ -176,7 +219,7 @@ export default function New() {
               <FiTrash size={28} color="#FFF" />
             </button>
             <img
-              src={item.previewUrl}
+              src={item.url}
               className="rounded-lg w-full h-32 object-cover"
               alt="Foto do carro"
             />
@@ -285,7 +328,7 @@ export default function New() {
             type="submit"
             className="w-full rounded-md bg-gray-800 text-white font-medium h-10"
           >
-            Cadastrar
+            Atualizar
           </button>
         </form>
       </div>

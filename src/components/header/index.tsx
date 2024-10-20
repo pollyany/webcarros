@@ -1,6 +1,6 @@
 import logoImg from "../../assets/logo.svg";
 import { Link } from "react-router-dom";
-import { FiUser, FiLogIn } from "react-icons/fi";
+import { FiUser } from "react-icons/fi";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 
@@ -25,7 +25,7 @@ export default function Header() {
         {!loadingAuth && !signed && (
           <Link to="/login">
             <div className="border-2 rounded-full p-1 border-gray-900">
-              <FiLogIn size={22} color="#000" />
+              <FiUser size={22} color="#000" />
             </div>
           </Link>
         )}
