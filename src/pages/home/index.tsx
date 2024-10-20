@@ -118,7 +118,7 @@ export default function Home() {
         <>
           {" "}
           <h1 className="font-bold text-center mt-6 text-2xl mb-4">
-            Os melhores carros para você
+            Os melhores veículos para você
           </h1>
           <main className="grid gird-cols-1 gap-6 mb-4 md:grid-cols-2 lg:grid-cols-3">
             {cars.map((car) => (
@@ -136,7 +136,7 @@ export default function Home() {
                   <img
                     className="w-full rounded-lg mb-2 h-72 object-cover max-h-72 hover:scale-105 transition-all"
                     src={car.images[0].url}
-                    alt="Carro"
+                    alt="Veículo"
                     onLoad={() => handleImageLoad(car.id)}
                     style={{
                       display: loadImages.includes(car.id) ? "block" : "none",

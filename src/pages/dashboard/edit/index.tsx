@@ -24,8 +24,8 @@ import { useNavigate, useParams } from "react-router-dom";
 const schema = z.object({
   name: z.string().min(1, "O campo nome é obrigatório"),
   model: z.string().min(1, "O modelo é obrigatório"),
-  year: z.string().min(1, "O Ano do carro é obrigatório"),
-  km: z.string().min(1, "O KM do carro é obrigatório"),
+  year: z.string().min(1, "O Ano do veículo é obrigatório"),
+  km: z.string().min(1, "O KM do veículo é obrigatório"),
   price: z.string().min(1, "O preço é obrigatório"),
   city: z.string().min(1, "A cidade é obrigatória"),
   whatsapp: z
@@ -167,11 +167,11 @@ export default function Edit() {
           description: "",
         });
         navigate("/dashboard")
-        toast.success("Carro atualizado com sucesso!");
+        toast.success("Veículo atualizado com sucesso!");
       })
       .catch((error) => {
-        console.log("Erro ao atualizar o carro:", error);
-        toast.error("Erro ao atualizar carro.");
+        console.log("Erro ao atualizar o veículo:", error);
+        toast.error("Erro ao atualizar veículo.");
       });
   }
 
@@ -221,7 +221,7 @@ export default function Edit() {
             <img
               src={item.url}
               className="rounded-lg w-full h-32 object-cover"
-              alt="Foto do carro"
+              alt="Foto do veículo"
             />
           </div>
         ))}
@@ -230,7 +230,7 @@ export default function Edit() {
       <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
-            <p className="mb-2 font-medium">Nome do carro</p>
+            <p className="mb-2 font-medium">Nome do veículo</p>
             <Input
               type="text"
               register={register}
@@ -241,7 +241,7 @@ export default function Edit() {
           </div>
 
           <div className="mb-3">
-            <p className="mb-2 font-medium">Modelo do carro</p>
+            <p className="mb-2 font-medium">Modelo do veículo</p>
             <Input
               type="text"
               register={register}
@@ -317,7 +317,7 @@ export default function Edit() {
               {...register("description")}
               name="description"
               id="description"
-              placeholder="Digite a descrição completa sobre o carro..."
+              placeholder="Digite a descrição completa sobre o veículo..."
             />
             {errors.description && (
               <p className="mb-1 text-red-500">{errors.description.message}</p>

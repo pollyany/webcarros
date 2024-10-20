@@ -23,8 +23,8 @@ import toast from "react-hot-toast";
 const schema = z.object({
   name: z.string().min(1, "O campo nome é obrigatório"),
   model: z.string().min(1, "O modelo é obrigatório"),
-  year: z.string().min(1, "O Ano do carro é obrigatório"),
-  km: z.string().min(1, "O KM do carro é obrigatório"),
+  year: z.string().min(1, "O Ano do veículo é obrigatório"),
+  km: z.string().min(1, "O KM do veículo é obrigatório"),
   price: z.string().min(1, "O preço é obrigatório"),
   city: z.string().min(1, "A cidade é obrigatória"),
   whatsapp: z
@@ -123,12 +123,12 @@ export default function New() {
         reset();
         setCarImages([]);
         console.log("CADASTRADO COM SUCESSO!");
-        toast.success("Carro cadastrado com sucesso!")
+        toast.success("Veículo cadastrado com sucesso!")
       })
       .catch((error) => {
         console.log(error);
         console.log("ERRO AO CADASTRAR NO BANCO");
-        toast.error("Erro ao cadastrar carro.")
+        toast.error("Erro ao cadastrar veículo.")
       });
   }
 
@@ -178,7 +178,7 @@ export default function New() {
             <img
               src={item.previewUrl}
               className="rounded-lg w-full h-32 object-cover"
-              alt="Foto do carro"
+              alt="Foto do veículo"
             />
           </div>
         ))}
@@ -187,7 +187,7 @@ export default function New() {
       <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
-            <p className="mb-2 font-medium">Nome do carro</p>
+            <p className="mb-2 font-medium">Nome do veículo</p>
             <Input
               type="text"
               register={register}
@@ -198,7 +198,7 @@ export default function New() {
           </div>
 
           <div className="mb-3">
-            <p className="mb-2 font-medium">Modelo do carro</p>
+            <p className="mb-2 font-medium">Modelo do veículo</p>
             <Input
               type="text"
               register={register}
@@ -274,7 +274,7 @@ export default function New() {
               {...register("description")}
               name="description"
               id="description"
-              placeholder="Digite a descrição completa sobre o carro..."
+              placeholder="Digite a descrição completa sobre o veículo..."
             />
             {errors.description && (
               <p className="mb-1 text-red-500">{errors.description.message}</p>
