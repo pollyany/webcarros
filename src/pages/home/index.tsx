@@ -3,12 +3,18 @@ import Container from "../../components/container";
 import { Link } from "react-router-dom";
 import { collection, query, getDocs, orderBy, where } from "firebase/firestore";
 import { db } from "../../services/firebaseConnection";
+import { formatPrice } from "../../hooks/maskPrice";
+import {
+  MdOutlineCalendarMonth,
+  MdOutlineColorLens,
+  MdOutlineSpeed,
+} from "react-icons/md";
 
 interface CarsProps {
   id: string;
   name: string;
   year: string;
-  price: string | number;
+  price: number;
   city: string;
   km: string;
   images: CarImageProps[];
@@ -31,7 +37,7 @@ export default function Home() {
   }, []);
 
   function loadCars() {
-    setIsSearching(true);
+    setIsSearching(false);
     const carsRef = collection(db, "cars");
     const queryRef = query(carsRef, orderBy("created", "desc"));
 
@@ -146,11 +152,21 @@ export default function Home() {
                 <p className="font-bold mt-1 mb-2 px-2">{car.name}</p>
 
                 <div className="flex flex-col px-2">
-                  <span className="text-zinc-700 mb-6">
-                    Ano {car.year} | {car.km} km
+                  <span className="text-zinc-700 mb-6 flex items-center gap-2">
+                    <span className="flex items-center gap-1">
+                      <MdOutlineColorLens /> Preto |
+                    </span>
+
+                    <span className="flex items-center gap-1">
+                      <MdOutlineCalendarMonth /> {car.year} |
+                    </span>
+
+                    <span className="flex items-center gap-1">
+                      <MdOutlineSpeed /> {car.km} KM
+                    </span>
                   </span>
                   <strong className="text-black font-medium text-xl">
-                    R$ {car.price}
+                    {formatPrice(car.price)}
                   </strong>
                 </div>
 
@@ -162,7 +178,7 @@ export default function Home() {
                     to={`/car/${car.id}`}
                     className="bg-red-500 text-white h-8 px-6 rounded-md font-medium text-base flex items-center justify-center"
                   >
-                    Ver mais
+                    Ver detalhes
                   </Link>
                 </div>
               </section>

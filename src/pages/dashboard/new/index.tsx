@@ -1,6 +1,6 @@
 import { ChangeEvent, useState, useContext } from "react";
 import Container from "../../../components/container";
-import  DashboardHeader  from "../../../components/panelHeader";
+import DashboardHeader from "../../../components/panelHeader";
 
 import { FiUpload, FiTrash } from "react-icons/fi";
 import { useForm } from "react-hook-form";
@@ -19,13 +19,13 @@ import {
 } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
 import toast from "react-hot-toast";
+import PriceInput from "../../../components/priceInput";
 
 const schema = z.object({
   name: z.string().min(1, "O campo nome é obrigatório"),
   model: z.string().min(1, "O modelo é obrigatório"),
   year: z.string().min(1, "O Ano do veículo é obrigatório"),
   km: z.string().min(1, "O KM do veículo é obrigatório"),
-  price: z.string().min(1, "O preço é obrigatório"),
   city: z.string().min(1, "A cidade é obrigatória"),
   whatsapp: z
     .string()
@@ -57,6 +57,7 @@ export default function New() {
   });
 
   const [carImages, setCarImages] = useState<ImageItemProps[]>([]);
+  const [price, setPrice] = useState("");
 
   async function handleFile(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -89,12 +90,26 @@ export default function New() {
         };
 
         setCarImages((images) => [...images, imageItem]);
-        toast.success("Imagem cadastrada com sucesso!")
+        toast.success("Imagem cadastrada com sucesso!");
       });
     });
   }
 
   function onSubmit(data: FormData) {
+    const priceNumericValue = parseFloat(price.replace(/\D/g, ""));
+    const isPriceEmpty = !price.trim();
+    const isPriceZero = priceNumericValue === 0;
+
+    if (isPriceEmpty) {
+      toast.error("O preço do veículo é obrigatório.");
+      return;
+    }
+  
+    if (isPriceZero) {
+      toast.error("O preço do veículo deve ser maior que zero.");
+      return;
+    }
+
     if (carImages.length === 0) {
       toast.error("Envie pelo meno 1 imagem!");
       return;
@@ -114,21 +129,22 @@ export default function New() {
       city: data.city,
       year: data.year,
       km: data.km,
-      price: data.price,
       description: data.description,
+      price: parseFloat(price),
       created: new Date(),
       images: carListImages,
     })
       .then(() => {
         reset();
         setCarImages([]);
+        setPrice("");
         console.log("CADASTRADO COM SUCESSO!");
-        toast.success("Veículo cadastrado com sucesso!")
+        toast.success("Veículo cadastrado com sucesso!");
       })
       .catch((error) => {
         console.log(error);
         console.log("ERRO AO CADASTRAR NO BANCO");
-        toast.error("Erro ao cadastrar veículo.")
+        toast.error("Erro ao cadastrar veículo.");
       });
   }
 
@@ -184,7 +200,7 @@ export default function New() {
         ))}
       </div>
 
-      <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2">
+      <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2 mb-4">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
             <p className="mb-2 font-medium">Nome do veículo</p>
@@ -258,12 +274,11 @@ export default function New() {
 
           <div className="mb-3">
             <p className="mb-2 font-medium">Preço</p>
-            <Input
-              type="text"
-              register={register}
+            <PriceInput
               name="price"
-              error={errors.price?.message}
-              placeholder="Ex: 69.000..."
+              placeholder="Ex: R$ 69.000..."
+              value={price}
+              onChange={(formattedPrice) => setPrice(formattedPrice)}
             />
           </div>
 

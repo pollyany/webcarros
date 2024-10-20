@@ -8,6 +8,15 @@ import { db } from "../../services/firebaseConnection";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
+import { formatPrice } from "../../hooks/maskPrice";
+import {
+  MdOutlineCalendarMonth,
+  MdOutlineColorLens,
+  MdOutlineLocationCity,
+  MdOutlineLocationOn,
+  MdOutlineSpeed,
+  MdOutlineWhatsapp,
+} from "react-icons/md";
 
 export interface CarProps {
   id: string;
@@ -18,7 +27,7 @@ export interface CarProps {
   km: string;
   description: string;
   created: string;
-  price: string | number;
+  price: number;
   whatsapp: string;
   images: ImagesCarProps[];
 }
@@ -104,26 +113,44 @@ export default function CarDetail() {
         <main className="w-full bg-white rounded-lg p-6 my-4">
           <div className="flex flex-col sm:flex-row mb-4 items-center justify-between">
             <h1 className="font-bold text-3xl text-black">{car?.name}</h1>
-            <h1 className="font-bold text-3xl text-black">R$ {car?.price}</h1>
+            <h1 className="font-bold text-3xl text-black">
+              {formatPrice(car?.price)}
+            </h1>
           </div>
           <p>{car?.model}</p>
 
           <div className="flex w-full gap-6 my-4">
             <div className="flex flex-col gap-4">
               <div>
-                <p>Cidade</p>
+                <p className="flex items-center gap-1">
+                  <MdOutlineLocationOn size={18} />
+                  Cidade
+                </p>
                 <strong>{car?.city}</strong>
               </div>
               <div>
-                <p>Ano</p>
+                <p className="flex items-center gap-1">
+                  <MdOutlineCalendarMonth size={18} />
+                  Ano
+                </p>
                 <strong>{car?.year}</strong>
               </div>
             </div>
 
             <div className="flex flex-col gap-4">
               <div>
-                <p>KM</p>
+                <p className="flex items-center gap-1">
+                  <MdOutlineSpeed size={18} />
+                  KM
+                </p>
                 <strong>{car?.km}</strong>
+              </div>
+              <div>
+                <p className="flex items-center gap-1">
+                  <MdOutlineColorLens size={18} />
+                  Cor
+                </p>
+                <strong>Preto</strong>
               </div>
             </div>
           </div>
@@ -132,7 +159,9 @@ export default function CarDetail() {
           <p className="mb-4">{car?.description}</p>
 
           <strong>Telefone / WhatsApp</strong>
-          <p>{car?.whatsapp}</p>
+          <p >
+             {car?.whatsapp}
+          </p>
 
           <a
             href={`https://api.whatsapp.com/send?phone=${car?.whatsapp}&text=Olá vi esse ${car?.name} no site WebCarros e fique interessado!`}

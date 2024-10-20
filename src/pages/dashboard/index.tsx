@@ -15,12 +15,14 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { AiFillEdit } from "react-icons/ai";
 import { IoMdTrash } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { formatPrice } from "../../hooks/maskPrice";
+import { MdOutlineCalendarMonth, MdOutlineColorLens, MdOutlineSpeed } from "react-icons/md";
 
 interface CarProps {
   id: string;
   name: string;
   year: string;
-  price: string | number;
+  price: number;
   city: string;
   km: string;
   images: ImageCarProps[];
@@ -163,11 +165,21 @@ export default function Dashboard() {
                 <p className="font-bold mt-1 px-2 mb-2">{car.name}</p>
 
                 <div className="flex flex-col px-2">
-                  <span className="text-zinc-700">
-                    Ano {car.year} | {car.km} km
+                  <span className="text-zinc-700 mb-6 flex items-center gap-2">
+                    <span className="flex items-center gap-1">
+                      <MdOutlineColorLens /> Preto |
+                    </span>
+
+                    <span className="flex items-center gap-1">
+                      <MdOutlineCalendarMonth /> {car.year} |
+                    </span>
+
+                    <span className="flex items-center gap-1">
+                      <MdOutlineSpeed /> {car.km} KM
+                    </span>
                   </span>
                   <strong className="text-black font-bold mt-4">
-                    R$ {car.price}
+                    {formatPrice(car.price)}
                   </strong>
                 </div>
 

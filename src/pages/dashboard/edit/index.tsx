@@ -20,13 +20,14 @@ import {
 import { updateDoc, doc, getDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import PriceInput from "../../../components/priceInput";
+import { formatPrice } from "../../../hooks/maskPrice";
 
 const schema = z.object({
   name: z.string().min(1, "O campo nome é obrigatório"),
   model: z.string().min(1, "O modelo é obrigatório"),
   year: z.string().min(1, "O Ano do veículo é obrigatório"),
   km: z.string().min(1, "O KM do veículo é obrigatório"),
-  price: z.string().min(1, "O preço é obrigatório"),
   city: z.string().min(1, "A cidade é obrigatória"),
   whatsapp: z
     .string()
@@ -57,6 +58,7 @@ export default function Edit() {
   });
 
   const [carImages, setCarImages] = useState<ImageItemProps[]>([]);
+  const [price, setPrice] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -82,10 +84,11 @@ export default function Edit() {
         model: carData?.model,
         description: carData?.description,
         whatsapp: carData?.whatsapp,
-        price: carData?.price,
         km: carData?.km,
       });
 
+      const formattedPrice = formatPrice(parseFloat(carData?.price));
+      setPrice(formattedPrice)
       setCarImages(carData?.images || []);
     }
 
@@ -129,6 +132,20 @@ export default function Edit() {
   }
 
   async function onSubmit(data: FormData) {
+    const priceNumericValue = parseFloat(price.replace(/\D/g, ""));
+    const isPriceEmpty = !price.trim();
+    const isPriceZero = priceNumericValue === 0;
+
+    if (isPriceEmpty) {
+      toast.error("O preço do veículo é obrigatório.");
+      return;
+    }
+
+    if (isPriceZero) {
+      toast.error("O preço do veículo deve ser maior que zero.");
+      return;
+    }
+
     if (carImages.length === 0) {
       toast.error("Envie pelo meno 1 imagem!");
       return;
@@ -150,23 +167,11 @@ export default function Edit() {
       city: data.city,
       year: data.year,
       km: data.km,
-      price: data.price,
+      price: priceNumericValue,
       description: data.description,
       images: carListImages,
     })
       .then(() => {
-        setCarImages([]);
-        reset({
-          name: "",
-          model: "",
-          whatsapp: "",
-          city: "",
-          year: "",
-          km: "",
-          price: "",
-          description: "",
-        });
-        navigate("/dashboard")
         toast.success("Veículo atualizado com sucesso!");
       })
       .catch((error) => {
@@ -227,7 +232,7 @@ export default function Edit() {
         ))}
       </div>
 
-      <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2">
+      <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2 mb-4">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
             <p className="mb-2 font-medium">Nome do veículo</p>
@@ -301,12 +306,11 @@ export default function Edit() {
 
           <div className="mb-3">
             <p className="mb-2 font-medium">Preço</p>
-            <Input
-              type="text"
-              register={register}
+            <PriceInput
               name="price"
-              error={errors.price?.message}
-              placeholder="Ex: 69.000..."
+              placeholder="Ex: R$ 69.000..."
+              value={price}
+              onChange={(formattedPrice) => setPrice(formattedPrice)}
             />
           </div>
 
