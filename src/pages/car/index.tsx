@@ -12,16 +12,15 @@ import { formatPrice } from "../../hooks/maskPrice";
 import {
   MdOutlineCalendarMonth,
   MdOutlineColorLens,
-  MdOutlineLocationCity,
   MdOutlineLocationOn,
   MdOutlineSpeed,
-  MdOutlineWhatsapp,
 } from "react-icons/md";
 
 export interface CarProps {
   id: string;
   name: string;
   model: string;
+  color: string;
   city: string;
   year: string;
   km: string;
@@ -60,6 +59,7 @@ export default function CarDetail() {
           name: snapshot.data()?.name,
           year: snapshot.data()?.year,
           city: snapshot.data()?.city,
+          color: snapshot.data()?.color,
           model: snapshot.data()?.model,
           description: snapshot.data()?.description,
           created: snapshot.data()?.created,
@@ -150,7 +150,7 @@ export default function CarDetail() {
                   <MdOutlineColorLens size={18} />
                   Cor
                 </p>
-                <strong>Preto</strong>
+                <strong>{car?.color}</strong>
               </div>
             </div>
           </div>

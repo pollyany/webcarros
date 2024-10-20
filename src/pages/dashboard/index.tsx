@@ -25,6 +25,7 @@ interface CarProps {
   price: number;
   city: string;
   km: string;
+  color: string;
   images: ImageCarProps[];
 }
 
@@ -60,6 +61,7 @@ export default function Dashboard() {
         listcars.push({
           id: doc.id,
           name: doc.data().name,
+          color: doc.data()?.color,
           year: doc.data().year,
           km: doc.data().km,
           city: doc.data().city,
@@ -99,6 +101,7 @@ export default function Dashboard() {
         year: doc.data().year,
         km: doc.data().km,
         city: doc.data().city,
+        color: doc.data()?.color,
         price: doc.data().price,
         images: doc.data().images,
       });
@@ -167,7 +170,7 @@ export default function Dashboard() {
                 <div className="flex flex-col px-2">
                   <span className="text-zinc-700 mb-6 flex items-center gap-2">
                     <span className="flex items-center gap-1">
-                      <MdOutlineColorLens /> Preto |
+                      <MdOutlineColorLens /> {car.color} |
                     </span>
 
                     <span className="flex items-center gap-1">

@@ -16,6 +16,7 @@ interface CarsProps {
   year: string;
   price: number;
   city: string;
+  color: string;
   km: string;
   images: CarImageProps[];
 }
@@ -50,6 +51,7 @@ export default function Home() {
           name: doc.data().name,
           year: doc.data().year,
           km: doc.data().km,
+          color: doc.data()?.color,
           city: doc.data().city,
           price: doc.data().price,
           images: doc.data().images,
@@ -93,6 +95,7 @@ export default function Home() {
         km: doc.data().km,
         city: doc.data().city,
         price: doc.data().price,
+        color: doc.data()?.color,
         images: doc.data().images,
       });
     });
@@ -154,7 +157,7 @@ export default function Home() {
                 <div className="flex flex-col px-2">
                   <span className="text-zinc-700 mb-6 flex items-center gap-2">
                     <span className="flex items-center gap-1">
-                      <MdOutlineColorLens /> Preto |
+                      <MdOutlineColorLens /> {car.color} |
                     </span>
 
                     <span className="flex items-center gap-1">

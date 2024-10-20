@@ -20,12 +20,13 @@ import {
 import { updateDoc, doc, getDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import PriceInput from "../../../components/priceInput";
 import { formatPrice } from "../../../hooks/maskPrice";
+import InputCurrency from "../../../components/inputCurrency";
 
 const schema = z.object({
   name: z.string().min(1, "O campo nome é obrigatório"),
   model: z.string().min(1, "O modelo é obrigatório"),
+  color: z.string().min(1, "A cor do veículo é obrigatória"),
   year: z.string().min(1, "O Ano do veículo é obrigatório"),
   km: z.string().min(1, "O KM do veículo é obrigatório"),
   city: z.string().min(1, "A cidade é obrigatória"),
@@ -82,13 +83,14 @@ export default function Edit() {
         year: carData?.year,
         city: carData?.city,
         model: carData?.model,
+        color: carData?.color,
         description: carData?.description,
         whatsapp: carData?.whatsapp,
         km: carData?.km,
       });
 
       const formattedPrice = formatPrice(parseFloat(carData?.price));
-      setPrice(formattedPrice)
+      setPrice(formattedPrice);
       setCarImages(carData?.images || []);
     }
 
@@ -166,12 +168,17 @@ export default function Edit() {
       whatsapp: data.whatsapp,
       city: data.city,
       year: data.year,
+      color: data.color,
       km: data.km,
       price: priceNumericValue,
       description: data.description,
       images: carListImages,
     })
       .then(() => {
+        reset();
+        setCarImages([]);
+        setPrice("");
+        navigate('/dashboard')
         toast.success("Veículo atualizado com sucesso!");
       })
       .catch((error) => {
@@ -234,29 +241,41 @@ export default function Edit() {
 
       <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2 mb-4">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-3">
-            <p className="mb-2 font-medium">Nome do veículo</p>
-            <Input
-              type="text"
-              register={register}
-              name="name"
-              error={errors.name?.message}
-              placeholder="Ex: Onix 1.0..."
-            />
-          </div>
+          <div className="flex w-full mb-3 flex-row items-center gap-4">
+            <div className="w-full">
+              <p className="mb-2 font-medium">Nome do veículo</p>
+              <Input
+                type="text"
+                register={register}
+                name="name"
+                error={errors.name?.message}
+                placeholder="Ex: Onix 1.0..."
+              />
+            </div>
 
-          <div className="mb-3">
-            <p className="mb-2 font-medium">Modelo do veículo</p>
-            <Input
-              type="text"
-              register={register}
-              name="model"
-              error={errors.model?.message}
-              placeholder="Ex: 1.0 Flex PLUS MANUAL..."
-            />
+            <div className="w-full">
+              <p className="mb-2 font-medium">Modelo do veículo</p>
+              <Input
+                type="text"
+                register={register}
+                name="model"
+                error={errors.model?.message}
+                placeholder="Ex: 1.0 Flex PLUS MANUAL..."
+              />
+            </div>
           </div>
 
           <div className="flex w-full mb-3 flex-row items-center gap-4">
+            <div className="w-full">
+              <p className="mb-2 font-medium">Cor</p>
+              <Input
+                type="text"
+                register={register}
+                name="color"
+                error={errors.color?.message}
+                placeholder="Ex: Azul..."
+              />
+            </div>
             <div className="w-full">
               <p className="mb-2 font-medium">Ano</p>
               <Input
@@ -267,7 +286,9 @@ export default function Edit() {
                 placeholder="Ex: 2016/2016..."
               />
             </div>
+          </div>
 
+          <div className="flex w-full mb-3 flex-row items-center gap-4">
             <div className="w-full">
               <p className="mb-2 font-medium">KM rodados</p>
               <Input
@@ -278,9 +299,19 @@ export default function Edit() {
                 placeholder="Ex: 23.900..."
               />
             </div>
+            <div className="w-full">
+              <p className="mb-2 font-medium">Preço</p>
+              <InputCurrency
+                name="price"
+                placeholder="Ex: R$ 69.000..."
+                idCar={id}
+                value={price}
+                onChange={(formattedPrice) => setPrice(formattedPrice)}
+              />
+            </div>
           </div>
 
-          <div className="flex w-full mb-3 flex-row items-center gap-4">
+          <div className="flex w-full mb-3 flex-row items-start gap-4">
             <div className="w-full">
               <p className="mb-2 font-medium">Telefone / Whatsapp</p>
               <Input
@@ -288,10 +319,9 @@ export default function Edit() {
                 register={register}
                 name="whatsapp"
                 error={errors.whatsapp?.message}
-                placeholder="Ex: 011999101923..."
+                placeholder="Ex: (91) 999101923..."
               />
             </div>
-
             <div className="w-full">
               <p className="mb-2 font-medium">Cidade</p>
               <Input
@@ -302,16 +332,6 @@ export default function Edit() {
                 placeholder="Ex: Campo Grande - MS..."
               />
             </div>
-          </div>
-
-          <div className="mb-3">
-            <p className="mb-2 font-medium">Preço</p>
-            <PriceInput
-              name="price"
-              placeholder="Ex: R$ 69.000..."
-              value={price}
-              onChange={(formattedPrice) => setPrice(formattedPrice)}
-            />
           </div>
 
           <div className="mb-3">

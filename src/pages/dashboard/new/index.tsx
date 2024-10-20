@@ -19,7 +19,7 @@ import {
 } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
 import toast from "react-hot-toast";
-import PriceInput from "../../../components/priceInput";
+import InputCurrency from "../../../components/inputCurrency";
 
 const schema = z.object({
   name: z.string().min(1, "O campo nome é obrigatório"),
@@ -27,6 +27,7 @@ const schema = z.object({
   year: z.string().min(1, "O Ano do veículo é obrigatório"),
   km: z.string().min(1, "O KM do veículo é obrigatório"),
   city: z.string().min(1, "A cidade é obrigatória"),
+  color: z.string().min(1, "A cor do veículo é obrigatória"),
   whatsapp: z
     .string()
     .min(1, "O Telefone é obrigatório")
@@ -104,9 +105,9 @@ export default function New() {
       toast.error("O preço do veículo é obrigatório.");
       return;
     }
-  
+
     if (isPriceZero) {
-      toast.error("O preço do veículo deve ser maior que zero.");
+      toast.error("O preço do veículo não pode ser zero.");
       return;
     }
 
@@ -128,6 +129,7 @@ export default function New() {
       whatsapp: data.whatsapp,
       city: data.city,
       year: data.year,
+      color: data.color,
       km: data.km,
       description: data.description,
       price: parseFloat(price),
@@ -138,6 +140,7 @@ export default function New() {
         reset();
         setCarImages([]);
         setPrice("");
+
         console.log("CADASTRADO COM SUCESSO!");
         toast.success("Veículo cadastrado com sucesso!");
       })
@@ -202,29 +205,41 @@ export default function New() {
 
       <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2 mb-4">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-3">
-            <p className="mb-2 font-medium">Nome do veículo</p>
-            <Input
-              type="text"
-              register={register}
-              name="name"
-              error={errors.name?.message}
-              placeholder="Ex: Onix 1.0..."
-            />
-          </div>
-
-          <div className="mb-3">
-            <p className="mb-2 font-medium">Modelo do veículo</p>
-            <Input
-              type="text"
-              register={register}
-              name="model"
-              error={errors.model?.message}
-              placeholder="Ex: 1.0 Flex PLUS MANUAL..."
-            />
-          </div>
-
           <div className="flex w-full mb-3 flex-row items-center gap-4">
+            <div className="w-full">
+              <p className="mb-2 font-medium">Nome do veículo</p>
+              <Input
+                type="text"
+                register={register}
+                name="name"
+                error={errors.name?.message}
+                placeholder="Ex: Onix 1.0..."
+              />
+            </div>
+
+            <div className="w-full">
+              <p className="mb-2 font-medium">Modelo do veículo</p>
+              <Input
+                type="text"
+                register={register}
+                name="model"
+                error={errors.model?.message}
+                placeholder="Ex: 1.0 Flex PLUS MANUAL..."
+              />
+            </div>
+          </div>
+
+          <div className="flex w-full mb-3 flex-row items-start gap-4">
+            <div className="w-full">
+              <p className="mb-2 font-medium">Cor</p>
+              <Input
+                type="text"
+                register={register}
+                name="color"
+                error={errors.color?.message}
+                placeholder="Ex: Azul..."
+              />
+            </div>
             <div className="w-full">
               <p className="mb-2 font-medium">Ano</p>
               <Input
@@ -235,7 +250,9 @@ export default function New() {
                 placeholder="Ex: 2016/2016..."
               />
             </div>
+          </div>
 
+          <div className="flex w-full mb-3 flex-row items-start gap-4">
             <div className="w-full">
               <p className="mb-2 font-medium">KM rodados</p>
               <Input
@@ -246,9 +263,17 @@ export default function New() {
                 placeholder="Ex: 23.900..."
               />
             </div>
+            <div className="w-full">
+              <p className="mb-2 font-medium">Preço</p>
+              <InputCurrency
+                name="price"
+                placeholder="Ex: R$ 69.000..."
+                value={price}
+                onChange={(formattedPrice) => setPrice(formattedPrice)}
+              />
+            </div>
           </div>
-
-          <div className="flex w-full mb-3 flex-row items-center gap-4">
+          <div className="flex w-full mb-3 flex-row items-start gap-4">
             <div className="w-full">
               <p className="mb-2 font-medium">Telefone / Whatsapp</p>
               <Input
@@ -256,10 +281,9 @@ export default function New() {
                 register={register}
                 name="whatsapp"
                 error={errors.whatsapp?.message}
-                placeholder="Ex: 011999101923..."
+                placeholder="Ex: (11) 99910-1923..."
               />
             </div>
-
             <div className="w-full">
               <p className="mb-2 font-medium">Cidade</p>
               <Input
@@ -270,16 +294,6 @@ export default function New() {
                 placeholder="Ex: Campo Grande - MS..."
               />
             </div>
-          </div>
-
-          <div className="mb-3">
-            <p className="mb-2 font-medium">Preço</p>
-            <PriceInput
-              name="price"
-              placeholder="Ex: R$ 69.000..."
-              value={price}
-              onChange={(formattedPrice) => setPrice(formattedPrice)}
-            />
           </div>
 
           <div className="mb-3">

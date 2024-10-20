@@ -5,13 +5,15 @@ interface PriceInputProps {
   name: string;
   placeholder: string;
   value: string;
+  idCar?: string;
   onChange: (value: string) => void;
 }
 
-export default function PriceInput({
+export default function InputCurrency({
   name,
   placeholder,
   value,
+  idCar,
   onChange,
 }: PriceInputProps) {
   const [inputValue, setInputValue] = useState(value);
@@ -19,7 +21,7 @@ export default function PriceInput({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (value && !getValue){
+    if (idCar && value && !getValue){
       setInputValue(value)
       setGetValue(true)
     }
@@ -33,7 +35,7 @@ export default function PriceInput({
     if (value.trim() === "") {
       setInputValue("");
       onChange("");
-      setError("O preço é obrigatório e não pode ser vazio.");
+      setError("O preço do veículo é obrigatório.");
       return;
     }
 
@@ -44,7 +46,7 @@ export default function PriceInput({
 
     const priceValue = parseFloat(numericValue);
     if (priceValue === 0) {
-      setError("O preço é obrigatório e não pode ser zero.");
+      setError("O preço do veículo não pode ser zero.");
     } else {
       setError(null);
     }
