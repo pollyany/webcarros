@@ -4,9 +4,10 @@ import Home from "./pages/home";
 import CarDetail from "./pages/car";
 import Dashboard from "./pages/dashboard";
 import New from "./pages/dashboard/new";
-import Login from "./pages/login";
-import  Private  from "./routes/Private";
 import Edit from "./pages/dashboard/edit";
+import Login from "./pages/login";
+import Private  from "./routes/Private";
+import ErrorPage from "./pages/error";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/edit/:id",
         element: <Private><Edit/></Private>
+      },
+      {
+        path: "*",
+        element: <ErrorPage/>
       }
     ]
   },

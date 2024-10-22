@@ -20,6 +20,7 @@ import {
 import { addDoc, collection } from "firebase/firestore";
 import toast from "react-hot-toast";
 import InputCurrency from "../../../components/inputCurrency";
+import InputFormated from "../../../components/inputFormated";
 
 const schema = z.object({
   name: z.string().min(1, "O campo nome é obrigatório"),
@@ -30,9 +31,9 @@ const schema = z.object({
   color: z.string().min(1, "A cor do veículo é obrigatória"),
   whatsapp: z
     .string()
-    .min(1, "O Telefone é obrigatório")
-    .refine((value) => /^(\d{11,12})$/.test(value), {
-      message: "Numero de telefone invalido.",
+    .min(2, "O Telefone é obrigatório")
+    .refine((value) => /^\(\d{2}\) \d{5}-\d{4}$/.test(value), {
+      message: "Número de telefone inválido.",
     }),
   description: z.string().min(1, "A descrição é obrigatória"),
 });
@@ -205,7 +206,7 @@ export default function New() {
 
       <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2 mb-4">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex w-full mb-3 flex-row items-center gap-4">
+          <div className="flex w-full mb-3 flex-row items-start gap-4">
             <div className="w-full">
               <p className="mb-2 font-medium">Nome do veículo</p>
               <Input
@@ -275,16 +276,6 @@ export default function New() {
           </div>
           <div className="flex w-full mb-3 flex-row items-start gap-4">
             <div className="w-full">
-              <p className="mb-2 font-medium">Telefone / Whatsapp</p>
-              <Input
-                type="text"
-                register={register}
-                name="whatsapp"
-                error={errors.whatsapp?.message}
-                placeholder="Ex: (11) 99910-1923..."
-              />
-            </div>
-            <div className="w-full">
               <p className="mb-2 font-medium">Cidade</p>
               <Input
                 type="text"
@@ -292,6 +283,17 @@ export default function New() {
                 name="city"
                 error={errors.city?.message}
                 placeholder="Ex: Campo Grande - MS..."
+              />
+            </div>
+            <div className="w-full">
+              <p className="mb-2 font-medium">Telefone / Whatsapp</p>
+              <InputFormated
+                type="text"
+                register={register}
+                name="whatsapp"
+                error={errors.whatsapp?.message}
+                placeholder="Ex: (99) 99999-9999"
+                mask="(99) 99999-9999"
               />
             </div>
           </div>
