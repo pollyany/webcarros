@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import Container from "../../components/container";
+import Container from "../../../components/container";
 import { FaWhatsapp } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { getDoc, doc } from "firebase/firestore";
-import { db } from "../../services/firebaseConnection";
+import { db } from "../../../services/firebaseConnection";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
-import { formatPrice } from "../../hooks/maskPrice";
+import { formatPrice } from "../../../hooks/maskPrice";
 import {
   MdOutlineCalendarMonth,
   MdOutlineColorLens,
@@ -72,7 +72,7 @@ export default function CarDetail() {
     }
 
     loadCar();
-  }, [id]);
+  }, [id, navigate]);
 
   useEffect(() => {
     function handleResize() {
@@ -159,16 +159,19 @@ export default function CarDetail() {
           <p className="mb-4">{car?.description}</p>
 
           <strong>Telefone / WhatsApp</strong>
-          <p >
-             {car?.whatsapp}
-          </p>
+          <p>{car?.whatsapp}</p>
 
           <a
-            href={`https://api.whatsapp.com/send?phone=${car?.whatsapp}&text=Olá vi esse ${car?.name} no site WebCarros e fique interessado!`}
+            href={`https://api.whatsapp.com/send?phone=${
+              car?.whatsapp
+            }&text=${encodeURIComponent(
+              `Olá, vi esse veículo ${car?.name} no site e fiquei interessado(a)!\n\nConfira  aqui: ${window.location.origin}/veiculos/${car?.id}`
+            )}`}
             target="_blank"
+            rel="noopener noreferrer"
             className="cursor-pointer bg-green-500 w-full text-white flex items-center justify-center gap-2 my-6 h-11 text-xl rounded-lg font-medium"
           >
-            Conversar com vendedor
+            Mais informações
             <FaWhatsapp size={26} color="#FFF" />
           </a>
         </main>
