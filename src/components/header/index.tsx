@@ -10,7 +10,7 @@ export default function Header() {
   const location = useLocation();
 
   return (
-    <div className="w-full flex items-center justify-center h-16 bg-white drop-shadow mb-4">
+    <div className="w-full flex items-center justify-center h-16 bg-white drop-shadow">
       <header className="flex h-full w-full max-w-7xl items-center justify-between px-4 mx-auto">
         <Link to="/" className="h-[70%]">
           <img src={logoImg} alt="Logo do site" className="max-h-full" />

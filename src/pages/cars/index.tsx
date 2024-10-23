@@ -10,7 +10,7 @@ import {
   MdOutlineSpeed,
 } from "react-icons/md";
 
-interface CarsProps {
+export interface CarsProps {
   id: string;
   name: string;
   year: string;
@@ -21,7 +21,7 @@ interface CarsProps {
   images: CarImageProps[];
 }
 
-interface CarImageProps {
+export interface CarImageProps {
   name: string;
   url: string;
 }

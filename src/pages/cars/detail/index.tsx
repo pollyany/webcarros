@@ -97,7 +97,11 @@ export default function CarDetail() {
       {car && (
         <Swiper
           slidesPerView={sliderPerView}
-          pagination={{ clickable: true }}
+          pagination={{
+            clickable: true, 
+            bulletClass: 'custom-bullet', 
+            bulletActiveClass: 'custom-bullet-active', 
+          }}
           navigation
           modules={[Navigation, Pagination]}
         >
