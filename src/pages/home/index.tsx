@@ -12,6 +12,7 @@ import {
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, Navigation } from "swiper/modules";
 import { CarsProps } from "../cars";
+import Banner from "../../assets/banner.avif"
 
 export default function Home() {
   const [cars, setCars] = useState<CarsProps[]>([]);
@@ -75,15 +76,20 @@ export default function Home() {
   return (
     <>
       <img
-        src="https://autocerto.com/bannerscliente/0/carro9_2509.jpg"
-        className="w-full"
+        src={Banner}
+        className="w-full h-auto"
         alt="Banner"
       />
       <Container>
         <h1 className="font-bold mx-auto mt-6 text-3xl mb-4 border-b pb-1 border-gray-300 w-fit">
-          Em destaque
+          Destaques
         </h1>
         <main>
+        {loadingCars && (
+          <div className="w-full flex items-center justify-center h-60">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
+          </div>
+        )}
           <Swiper
             slidesPerView={sliderPerView}
             autoplay={{
@@ -162,12 +168,6 @@ export default function Home() {
           <h1 className="font-bold text-center mt-6 text-2xl mb-4">
             O sistema ainda não possui nenhum veículo cadastrado :/
           </h1>
-        )}
-
-        {loadingCars && (
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
-          </div>
         )}
       </Container>
     </>

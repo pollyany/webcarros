@@ -45,7 +45,7 @@ export default function Header() {
                 : "before:scale-x-0"
             } hover:before:scale-x-100`}
           >
-            Sobre Nós
+            Localização
           </Link>
           <Link
             to="/contato"
@@ -58,27 +58,27 @@ export default function Header() {
             Contato
           </Link>
 
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             <a
               href={`https://api.whatsapp.com/send?phone=(91) 98843-8387&text=Olá!`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaWhatsapp size={28} color="#1f2937" />
+              <FaWhatsapp size={26} color="#1f2937" />
             </a>
             <a
               href={`https://api.whatsapp.com/send?phone=(91) 98843-8387&text=Olá!`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaInstagram size={28} color="#1f2937" />
+              <FaInstagram size={26} color="#1f2937" />
             </a>
             <a
               href={`https://api.whatsapp.com/send?phone=(91) 98843-8387&text=Olá!`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaFacebook size={28} color="#1f2937" />
+              <FaFacebook size={26} color="#1f2937" />
             </a>
           </div>
 
