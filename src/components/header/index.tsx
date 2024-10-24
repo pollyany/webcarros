@@ -1,16 +1,12 @@
 import logoImg from "../../assets/logo.png";
 import { Link, useLocation } from "react-router-dom";
-// import { FiUser } from "react-icons/fi";
-// import { useContext } from "react";
-// import { AuthContext } from "../../contexts/AuthContext";
 import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 export default function Header() {
-  // const { signed, loadingAuth } = useContext(AuthContext);
   const location = useLocation();
 
   return (
-    <div className="w-full flex items-center justify-center h-16 bg-white drop-shadow">
+    <div className="w-full flex items-center justify-center h-16 bg-white drop-shadow fixed top-0">
       <header className="flex h-full w-full max-w-7xl items-center justify-between px-4 mx-auto">
         <Link to="/" className="h-[70%]">
           <img src={logoImg} alt="Logo do site" className="max-h-full" />
@@ -81,14 +77,6 @@ export default function Header() {
               <FaFacebook size={26} color="#1f2937" />
             </a>
           </div>
-
-          {/* {!loadingAuth && signed && (
-            <Link to="/dashboard">
-              <div className="border-2 rounded-full p-1 border-gray-900">
-                <FiUser size={22} color="#000" />
-              </div>
-            </Link>
-          )} */}
         </nav>
       </header>
     </div>

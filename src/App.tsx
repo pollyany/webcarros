@@ -2,15 +2,20 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "./components/layout";
 import Home from "./pages/home";
 import CarDetail from "./pages/cars/detail";
-import Dashboard from "./pages/dashboard";
-import New from "./pages/dashboard/new";
-import Edit from "./pages/dashboard/edit";
 import Login from "./pages/login";
 import Private from "./routes/Private";
 import ErrorPage from "./pages/error";
 import Cars from "./pages/cars";
+import LayoutAdmin from "./components/admin/layout";
+import Dashboard from "./pages/admin/dashboard";
+import New from "./pages/admin/dashboard/new";
+import Edit from "./pages/admin/dashboard/edit";
 
 const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login />,
+  },
   {
     element: <Layout />,
     children: [
@@ -26,6 +31,11 @@ const router = createBrowserRouter([
         path: "/veiculos/:id",
         element: <CarDetail />,
       },
+    ],
+  },
+  {
+    element: <LayoutAdmin />,
+    children: [
       {
         path: "/dashboard",
         element: (
@@ -50,15 +60,11 @@ const router = createBrowserRouter([
           </Private>
         ),
       },
-      {
-        path: "*",
-        element: <ErrorPage />,
-      },
     ],
   },
   {
-    path: "/login",
-    element: <Login />,
+    path: "*",
+    element: <ErrorPage />,
   },
 ]);
 

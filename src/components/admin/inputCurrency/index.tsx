@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { formatPrice } from "../../hooks/maskPrice";
+import { formatPrice } from "../../../hooks/maskPrice";
+
 
 interface PriceInputProps {
   name: string;

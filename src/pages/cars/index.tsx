@@ -105,7 +105,7 @@ export default function Cars() {
 
   return (
     <Container>
-      <section className="bg-white p-4 rounded-lg  w-full max-w-3xl mx-auto flex justify-center items-center gap-2">
+      <section className="bg-white mt-20 p-4 rounded-lg w-full max-w-3xl mx-auto flex justify-center items-center gap-2">
         <input
           className="w-full border-2 rounded-lg h-9 px-3 outline-none"
           placeholder="Qual veículo você está buscando?"
@@ -125,9 +125,8 @@ export default function Cars() {
 
       {cars.length > 0 && (
         <>
-          {" "}
-          <h1 className="font-bold text-center mt-6 text-2xl mb-4">
-            Os melhores veículos para você
+          <h1 className="font-bold mx-auto mt-6 text-3xl mb-4 border-b pb-1 border-gray-300 w-fit">
+            Nossos veículos
           </h1>
           <main className="grid gird-cols-1 gap-6 mb-4 md:grid-cols-2 lg:grid-cols-3">
             {cars.map((car) => (

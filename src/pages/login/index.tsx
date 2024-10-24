@@ -2,7 +2,7 @@ import logoImg from "../../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import Container from "../../components/container";
 
-import Input from "../../components/input";
+import Input from "../../components/admin/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,7 +44,7 @@ export default function Login() {
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(() => {
         toast.success("Logado com sucesso!");
-        navigate("/", { replace: true });
+        navigate("/dashboard", { replace: true });
       })
       .catch((error) => {
         console.log("Erro ao logar");

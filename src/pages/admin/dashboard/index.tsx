@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import Container from "../../components/container";
-import DashboardHeader from "../../components/panelHeader";
+
 
 import {
   collection,
@@ -10,13 +9,17 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "../../services/firebaseConnection";
-import { AuthContext } from "../../contexts/AuthContext";
+
 import { AiFillEdit } from "react-icons/ai";
 import { IoMdTrash } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { formatPrice } from "../../hooks/maskPrice";
+
 import { MdOutlineCalendarMonth, MdOutlineColorLens, MdOutlineSpeed } from "react-icons/md";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { db } from "../../../services/firebaseConnection";
+import Container from "../../../components/container";
+import DashboardHeader from "../../../components/admin/panelHeader";
+import { formatPrice } from "../../../hooks/maskPrice";
 
 interface CarProps {
   id: string;

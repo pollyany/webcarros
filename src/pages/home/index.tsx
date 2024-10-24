@@ -12,7 +12,7 @@ import {
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, Navigation } from "swiper/modules";
 import { CarsProps } from "../cars";
-import Banner from "../../assets/banner.avif"
+import Banner from "../../assets/banner.avif";
 
 export default function Home() {
   const [cars, setCars] = useState<CarsProps[]>([]);
@@ -75,21 +75,17 @@ export default function Home() {
 
   return (
     <>
-      <img
-        src={Banner}
-        className="w-full h-auto"
-        alt="Banner"
-      />
-      <Container>
-        <h1 className="font-bold mx-auto mt-6 text-3xl mb-4 border-b pb-1 border-gray-300 w-fit">
-          Destaques
-        </h1>
+      <img src={Banner} className="w-full h-auto mt-16" alt="Banner"/>
+      <Container >
         <main>
-        {loadingCars && (
-          <div className="w-full flex items-center justify-center h-60">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
-          </div>
-        )}
+          <h1 className="font-bold mx-auto mt-6 text-3xl mb-4 border-b pb-1 border-gray-300 w-fit">
+            Destaques
+          </h1>
+          {loadingCars && (
+            <div className="w-full flex items-center justify-center h-60">
+              <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
+            </div>
+          )}
           <Swiper
             slidesPerView={sliderPerView}
             autoplay={{
