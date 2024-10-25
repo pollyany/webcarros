@@ -6,8 +6,8 @@ export default function Header() {
   const location = useLocation();
 
   return (
-    <div className="w-full flex items-center justify-center h-16 bg-white drop-shadow fixed top-0">
-      <header className="flex h-full w-full max-w-7xl items-center justify-between px-4 mx-auto">
+    <header className="w-full flex items-center justify-center h-16 bg-white drop-shadow fixed top-0 z-50">
+      <div className="flex h-full w-full max-w-7xl items-center justify-between px-4 mx-auto">
         <Link to="/" className="h-[70%]">
           <img src={logoImg} alt="Logo do site" className="max-h-full" />
         </Link>
@@ -60,7 +60,7 @@ export default function Header() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaWhatsapp size={26} color="#1f2937" />
+              <FaFacebook size={26} color="#1f2937" />
             </a>
             <a
               href={`https://api.whatsapp.com/send?phone=(91) 98843-8387&text=Olá!`}
@@ -74,11 +74,11 @@ export default function Header() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaFacebook size={26} color="#1f2937" />
+              <FaWhatsapp size={26} color="#1f2937" />
             </a>
           </div>
         </nav>
-      </header>
-    </div>
+      </div>
+    </header>
   );
 }

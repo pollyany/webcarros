@@ -86,7 +86,7 @@ export default function Home() {
             Destaques
           </h1>
           {loadingCars && (
-            <div className="w-full flex items-center justify-center h-60">
+            <div className="w-full flex items-center justify-center" style={{height: "493px"}}>
               <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
             </div>
           )}
@@ -163,7 +163,6 @@ export default function Home() {
             ))}
           </Swiper>
         </main>
-
         {cars.length < 1 && !loadingCars && (
           <h1 className="font-bold text-center mt-6 text-2xl mb-4">
             O sistema ainda não possui nenhum veículo cadastrado :/

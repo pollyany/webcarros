@@ -9,6 +9,12 @@ body {
   /* scrollbar-color: #aaadb3 #f1f5f9; */
 }
 
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .custom-bullet {
   background-color: #bfc3c9;
   width: 15px;
