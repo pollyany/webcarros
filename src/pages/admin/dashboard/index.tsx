@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 
-
 import {
   collection,
   getDocs,
@@ -14,12 +13,17 @@ import { AiFillEdit } from "react-icons/ai";
 import { IoMdTrash } from "react-icons/io";
 import { Link } from "react-router-dom";
 
-import { MdOutlineCalendarMonth, MdOutlineColorLens, MdOutlineSpeed } from "react-icons/md";
+import {
+  MdOutlineCalendarMonth,
+  MdOutlineColorLens,
+  MdOutlineSpeed,
+} from "react-icons/md";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { db } from "../../../services/firebaseConnection";
 import Container from "../../../components/container";
 import DashboardHeader from "../../../components/admin/panelHeader";
 import { formatPrice } from "../../../hooks/maskPrice";
+import toast from "react-hot-toast";
 
 interface CarProps {
   id: string;
@@ -117,6 +121,7 @@ export default function Dashboard() {
     const docRef = doc(db, "cars", id);
     await deleteDoc(docRef);
     setCars(cars.filter((car) => car.id !== id));
+    toast.success("Deletado com sucesso!");
   }
 
   function handleImageLoad(id: string) {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Container from "../../components/container";
 import { Link } from "react-router-dom";
-import { collection, query, getDocs, orderBy } from "firebase/firestore";
+import { collection, query, getDocs, orderBy, where } from "firebase/firestore";
 import { db } from "../../services/firebaseConnection";
 import { formatPrice } from "../../hooks/maskPrice";
 import {
@@ -46,7 +46,11 @@ export default function Home() {
 
   function loadCars() {
     const carsRef = collection(db, "cars");
-    const queryRef = query(carsRef, orderBy("created", "desc"));
+    const queryRef = query(
+      carsRef,
+      where("destaque", "==", "S"),
+      orderBy("created", "desc")
+    );
 
     getDocs(queryRef).then((snapshot) => {
       const listcars = [] as CarsProps[];
@@ -103,7 +107,7 @@ export default function Home() {
             modules={[Pagination, Navigation, Autoplay]}
           >
             {cars.map((car) => (
-              <SwiperSlide key={car.id} className="mb-8">
+              <SwiperSlide key={car.id} className="mb-8 select-none">
                 <section className="w-full bg-white overflow-hidden rounded-lg">
                   <div
                     className="w-full h-72 rounded-lg mb-2 bg-slate-200"

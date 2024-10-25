@@ -54,7 +54,7 @@ export default function Header() {
             Contato
           </Link>
 
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <a
               href={`https://api.whatsapp.com/send?phone=(91) 98843-8387&text=Olá!`}
               target="_blank"

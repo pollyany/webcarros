@@ -8,8 +8,8 @@ import ErrorPage from "./pages/error";
 import Cars from "./pages/cars";
 import LayoutAdmin from "./components/admin/layout";
 import Dashboard from "./pages/admin/dashboard";
-import New from "./pages/admin/dashboard/new";
-import Edit from "./pages/admin/dashboard/edit";
+import New from "./pages/admin/car/new";
+import Edit from "./pages/admin/car/edit";
 
 const router = createBrowserRouter([
   {

@@ -1,39 +1,39 @@
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useState, useContext, useEffect } from "react";
 
-
+import { FiUpload, FiTrash } from "react-icons/fi";
 import { useForm } from "react-hook-form";
-import { FiTrash, FiUpload } from "react-icons/fi";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { v4 as uuidV4 } from "uuid";
 
-
-import { addDoc, collection } from "firebase/firestore";
 import {
-  deleteObject,
-  getDownloadURL,
   ref,
   uploadBytes,
+  getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
+import { updateDoc, doc, getDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import { AuthContext } from "../../../../contexts/AuthContext";
+import { db, storage } from "../../../../services/firebaseConnection";
+import { formatPrice } from "../../../../hooks/maskPrice";
 import DashboardHeader from "../../../../components/admin/panelHeader";
 import Container from "../../../../components/container";
 import Input from "../../../../components/admin/input";
-import { db, storage } from "../../../../services/firebaseConnection";
 import InputCurrency from "../../../../components/admin/inputCurrency";
 import InputFormated from "../../../../components/admin/inputFormated";
-import { AuthContext } from "../../../../contexts/AuthContext";
-
+import Select from "../../../../components/admin/select";
 
 const schema = z.object({
   name: z.string().min(1, "O campo nome é obrigatório"),
   model: z.string().min(1, "O modelo é obrigatório"),
+  color: z.string().min(1, "A cor do veículo é obrigatória"),
   year: z.string().min(1, "O Ano do veículo é obrigatório"),
   km: z.string().min(1, "O KM do veículo é obrigatório"),
   city: z.string().min(1, "A cidade é obrigatória"),
-  color: z.string().min(1, "A cor do veículo é obrigatória"),
   whatsapp: z
     .string()
     .min(2, "O Telefone é obrigatório")
@@ -41,17 +41,17 @@ const schema = z.object({
       message: "Número de telefone inválido.",
     }),
   description: z.string().min(1, "A descrição é obrigatória"),
+  destaque: z.string().min(1, "Em destaque é obrigatório."),
 });
 
 type FormData = z.infer<typeof schema>;
 
 interface ImageItemProps {
   name: string;
-  previewUrl: string;
   url: string;
 }
 
-export default function New() {
+export default function Edit() {
   const { user } = useContext(AuthContext);
   const {
     register,
@@ -65,6 +65,43 @@ export default function New() {
 
   const [carImages, setCarImages] = useState<ImageItemProps[]>([]);
   const [price, setPrice] = useState("");
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function loadCar() {
+      if (!id) {
+        return;
+      }
+
+      const docRef = doc(db, "cars", id);
+      const snapshot = await getDoc(docRef);
+      if (!snapshot.exists()) {
+        navigate("/dashboard");
+        return;
+      }
+
+      const carData = snapshot.data();
+
+      reset({
+        name: carData?.name,
+        year: carData?.year,
+        city: carData?.city,
+        model: carData?.model,
+        color: carData?.color,
+        description: carData?.description,
+        destaque: carData?.destaque,
+        whatsapp: carData?.whatsapp,
+        km: carData?.km,
+      });
+
+      const formattedPrice = formatPrice(parseFloat(carData?.price));
+      setPrice(formattedPrice);
+      setCarImages(carData?.images || []);
+    }
+
+    loadCar();
+  }, [id]);
 
   async function handleFile(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -102,7 +139,7 @@ export default function New() {
     });
   }
 
-  function onSubmit(data: FormData) {
+  async function onSubmit(data: FormData) {
     const priceNumericValue = parseFloat(price.replace(/\D/g, ""));
     const isPriceEmpty = !price.trim();
     const isPriceZero = priceNumericValue === 0;
@@ -113,7 +150,7 @@ export default function New() {
     }
 
     if (isPriceZero) {
-      toast.error("O preço do veículo não pode ser zero.");
+      toast.error("O preço do veículo deve ser maior que zero.");
       return;
     }
 
@@ -129,7 +166,9 @@ export default function New() {
       };
     });
 
-    addDoc(collection(db, "cars"), {
+    const carRef = doc(db, "cars", id as string);
+
+    await updateDoc(carRef, {
       name: data.name.toUpperCase(),
       model: data.model,
       whatsapp: data.whatsapp,
@@ -137,23 +176,21 @@ export default function New() {
       year: data.year,
       color: data.color,
       km: data.km,
+      price: priceNumericValue,
       description: data.description,
-      price: parseFloat(price),
-      created: new Date(),
+      destaque: data.destaque,
       images: carListImages,
     })
       .then(() => {
         reset();
         setCarImages([]);
         setPrice("");
-
-        console.log("CADASTRADO COM SUCESSO!");
-        toast.success("Veículo cadastrado com sucesso!");
+        navigate("/dashboard");
+        toast.success("Veículo atualizado com sucesso!");
       })
       .catch((error) => {
-        console.log(error);
-        console.log("ERRO AO CADASTRAR NO BANCO");
-        toast.error("Erro ao cadastrar veículo.");
+        console.log("Erro ao atualizar o veículo:", error);
+        toast.error("Erro ao atualizar veículo.");
       });
   }
 
@@ -201,7 +238,7 @@ export default function New() {
               <FiTrash size={28} color="#FFF" />
             </button>
             <img
-              src={item.previewUrl}
+              src={item.url}
               className="rounded-lg w-full h-32 object-cover"
               alt="Foto do veículo"
             />
@@ -211,7 +248,7 @@ export default function New() {
 
       <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2 mb-4">
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex w-full mb-3 flex-row items-start gap-4">
+          <div className="mb-3">
             <div className="w-full">
               <p className="mb-2 font-medium">Nome do veículo</p>
               <Input
@@ -222,7 +259,9 @@ export default function New() {
                 placeholder="Ex: Onix 1.0..."
               />
             </div>
+          </div>
 
+          <div className="flex w-full mb-3 flex-row items-center gap-4">
             <div className="w-full">
               <p className="mb-2 font-medium">Modelo do veículo</p>
               <Input
@@ -233,9 +272,6 @@ export default function New() {
                 placeholder="Ex: 1.0 Flex PLUS MANUAL..."
               />
             </div>
-          </div>
-
-          <div className="flex w-full mb-3 flex-row items-start gap-4">
             <div className="w-full">
               <p className="mb-2 font-medium">Cor</p>
               <Input
@@ -246,6 +282,9 @@ export default function New() {
                 placeholder="Ex: Azul..."
               />
             </div>
+          </div>
+
+          <div className="flex w-full mb-3 flex-row items-center gap-4">
             <div className="w-full">
               <p className="mb-2 font-medium">Ano</p>
               <Input
@@ -256,9 +295,6 @@ export default function New() {
                 placeholder="Ex: 2016/2016..."
               />
             </div>
-          </div>
-
-          <div className="flex w-full mb-3 flex-row items-start gap-4">
             <div className="w-full">
               <p className="mb-2 font-medium">KM rodados</p>
               <Input
@@ -269,13 +305,29 @@ export default function New() {
                 placeholder="Ex: 23.900..."
               />
             </div>
+          </div>
+
+          <div className="flex w-full mb-3 flex-row items-start gap-4">
             <div className="w-full">
               <p className="mb-2 font-medium">Preço</p>
               <InputCurrency
                 name="price"
                 placeholder="Ex: R$ 69.000..."
+                idCar={id}
                 value={price}
                 onChange={(formattedPrice) => setPrice(formattedPrice)}
+              />
+            </div>
+            <div className="w-full">
+              <p className="mb-2 font-medium">Em destaque?</p>
+              <Select
+                name="destaque"
+                register={register}
+                error={errors.destaque?.message}
+                options={[
+                  { value: "S", label: "Sim" },
+                  { value: "N", label: "Não" },
+                ]}
               />
             </div>
           </div>
@@ -321,7 +373,7 @@ export default function New() {
             type="submit"
             className="w-full rounded-md bg-gray-800 text-white font-medium h-10"
           >
-            Cadastrar
+            Atualizar
           </button>
         </form>
       </div>
